@@ -18,11 +18,16 @@ const io = new Server(httpServer, { cors: { origin: "*" } });
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
 
-// Razorpay setup
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+// Razorpay setup (safe for deployment)
+let razorpay = null;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+  razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
+} else {
+  console.log("⚠️ Razorpay keys not found. Payment will use demo mode.");
+}
 
 app.use(helmet());
 app.use(cors());
@@ -108,14 +113,27 @@ app.get('/api/buses/search', async (req, res) => {
 app.post('/api/payment/create-order', authenticateToken, async (req, res) => {
   try {
     const { amount } = req.body;
+
+    if (!razorpay) {
+      // Demo mode if keys are not set
+      return res.json({
+        id: "order_demo_" + Date.now(),
+        amount: amount * 100,
+        currency: "INR",
+        status: "created"
+      });
+    }
+
     const options = {
       amount: amount * 100,
       currency: "INR",
       receipt: `rcpt_${Date.now()}`,
     };
+
     const order = await razorpay.orders.create(options);
     res.json(order);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
