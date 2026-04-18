@@ -1,0 +1,101 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// Enums
+enum Role {
+    USER
+    ADMIN
+}
+
+enum BusType {
+    AC_Sleeper
+    NonAC_Seater
+    Volvo_Sleeper
+    AC_Seater
+    Sleeper
+}
+
+enum SeatStatus {
+    AVAILABLE
+    BOOKED
+}
+
+enum BookingStatus {
+    CONFIRMED
+    CANCELLED
+    COMPLETED
+}
+
+// Models
+model User {
+    id        String    @id @default(uuid())
+    name      String
+    email     String    @unique
+    password  String
+    role      Role      @default(USER)
+    wallet    Float     @default(0.0)
+    bookings  Booking[]
+    createdAt DateTime  @default(now())
+}
+
+model Bus {
+    id         String     @id @default(uuid())
+    busNumber  String     @unique
+    type       BusType
+    totalSeats Int
+    amenities  String[] // ["WiFi", "Toilet", "Charging", "CCTV"]
+    driverName String
+    seats      Seat[]
+    schedules  Schedule[]
+}
+
+model Route {
+    id        String     @id @default(uuid())
+    from      String // Jaipur, Udaipur, Jodhpur, Jaisalmer, Mount Abu, etc.
+    to        String
+    distance  Int // in km
+    duration  Int // minutes
+    basePrice Float
+    schedules Schedule[]
+}
+
+model Schedule {
+    id             String    @id @default(uuid())
+    busId          String
+    routeId        String
+    departure      DateTime
+    arrival        DateTime
+    price          Float
+    availableSeats Int
+    bus            Bus       @relation(fields: [busId], references: [id])
+    route          Route     @relation(fields: [routeId], references: [id])
+    bookings       Booking[]
+}
+
+model Seat {
+    id         String     @id @default(uuid())
+    busId      String
+    seatNumber String // A1, A2, B1, etc.
+    status     SeatStatus @default(AVAILABLE)
+    bus        Bus        @relation(fields: [busId], references: [id])
+}
+
+model Booking {
+    id          String        @id @default(uuid())
+    userId      String
+    scheduleId  String
+    seats       String[] // ["A1", "A2"]
+    totalAmount Float
+    status      BookingStatus @default(CONFIRMED)
+    paymentId   String?
+    ticketUrl   String?
+    createdAt   DateTime      @default(now())
+    user        User          @relation(fields: [userId], references: [id])
+    schedule    Schedule      @relation(fields: [scheduleId], references: [id])
+}
