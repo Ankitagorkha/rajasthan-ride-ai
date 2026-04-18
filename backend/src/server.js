@@ -7,6 +7,7 @@ import { Server } from 'socket.io';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import Razorpay from 'razorpay';
 
 dotenv.config();
 
@@ -17,17 +18,33 @@ const io = new Server(httpServer, { cors: { origin: "*" } });
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
 
+// Razorpay setup
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+// ====================== ROOT ROUTE (Fix for Render) ======================
+app.get('/', (req, res) => {
+  res.send(`
+    <h1>🐪 Rajasthan Ride AI Backend</h1>
+    <p><strong>Status:</strong> Running Successfully ✅</p>
+    <p><strong>Time:</strong> ${new Date().toLocaleString('en-IN')}</p>
+    <br>
+    <p>Backend is live and connected to PostgreSQL.</p>
+  `);
+});
 
 // Auth Middleware
 const authenticateToken = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Access denied' });
   try {
-    const user = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = user;
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
     next();
   } catch (err) {
     res.status(403).json({ error: 'Invalid token' });
@@ -65,7 +82,6 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// 🔥 NEW: Get current logged-in user from database
 app.get('/api/auth/me', authenticateToken, async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
@@ -86,6 +102,22 @@ app.get('/api/buses/search', async (req, res) => {
     include: { bus: true, route: true }
   });
   res.json(schedules.length ? schedules : []);
+});
+
+// Razorpay - Create Order
+app.post('/api/payment/create-order', authenticateToken, async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const options = {
+      amount: amount * 100,
+      currency: "INR",
+      receipt: `rcpt_${Date.now()}`,
+    };
+    const order = await razorpay.orders.create(options);
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 io.on('connection', (socket) => {
