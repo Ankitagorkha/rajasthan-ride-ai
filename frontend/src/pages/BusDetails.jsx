@@ -50,8 +50,8 @@ export default function BusDetails() {
               to={`/tracking/${id || 'demo'}`}
               className="w-full text-center border-2 border-white/30 hover:border-white/60 text-white py-6 rounded-3xl text-2xl font-bold transition hover:bg-white/10"
             >
-              🗺️ Track Live Bus
-            </Link> track bus live link
+              🗺️Track Live Bus link
+            </Link>
           </div>
         </div>
 
