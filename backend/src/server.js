@@ -36,7 +36,7 @@ app.use(express.json());
 // ====================== ROOT ROUTE (Fix for Render) ======================
 app.get('/', (req, res) => {
   res.send(`
-    <h1>🐪 Rajasthan Ride AI Backend</h1>
+    <h1>🐪 Rajasthan Rider'S Backend</h1>
     <p><strong>Status:</strong> Running Successfully ✅</p>
     <p><strong>Time:</strong> ${new Date().toLocaleString('en-IN')}</p>
     <br>
@@ -150,5 +150,5 @@ io.on('connection', (socket) => {
 });
 
 httpServer.listen(PORT, () => {
-  console.log(`🚀 Rajasthan Ride AI Backend running on http://localhost:${PORT}`);
+  console.log(`🚀 Rajasthan Rider'S Backend running on http://localhost:${PORT}`);
 });

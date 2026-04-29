@@ -1,4 +1,4 @@
-# 🐪 Rajasthan Ride AI
+# 🐪 Rajasthan Rider'S
 
 **A Premium Rajasthan-Themed Bus Booking Platform**  
 Modern, Creative & Fully Functional Capstone Project

@@ -34,7 +34,7 @@ export default function Home() {
 
       {/* Quick Info */}
       <div className="max-w-7xl mx-auto px-6 py-20 text-center">
-        <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-white">Why Choose Rajasthan Ride AI?</h2>
+        <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-white">Why Choose Rajasthan Rider'S?</h2>
         <p className="text-xl text-gray-600 dark:text-gray-400 mb-12">Real-time bookings • Animated seat maps • Tourism bundles • Live camel tracking</p>
       </div>
             {/* Tourism Bundles Section */}

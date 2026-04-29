@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌵 Seeding Rajasthan Ride AI data...');
+  console.log('🌵 Seeding Rajasthan Rider'S data...');
 
   // Create sample users
   await prisma.user.upsert({

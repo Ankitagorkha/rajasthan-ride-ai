@@ -27,7 +27,7 @@ export default function Navbar() {
           whileHover={{ scale: 1.05 }}
         >
           <span className="text-desert-500">🐪</span>
-          <span className="bg-gradient-to-r from-desert-500 to-fort-500 bg-clip-text text-transparent">Rajasthan Ride AI</span>
+          <span className="bg-gradient-to-r from-desert-500 to-fort-500 bg-clip-text text-transparent">Rajasthan Rider'S</span>
         </motion.div>
 
         <div className="flex items-center gap-8 text-lg">
