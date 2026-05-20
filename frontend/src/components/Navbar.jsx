@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { useEffect, useState } from 'react';
@@ -7,17 +7,16 @@ export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
-    setUser(storedUser ? JSON.parse(storedUser) : null);
-  }, [location.pathname]);
+    if (storedUser) setUser(JSON.parse(storedUser));
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
     setUser(null);
-    navigate('/login');
+    navigate('/login'); 
   };
 
   return (
@@ -34,14 +33,10 @@ export default function Navbar() {
         <div className="flex items-center gap-8 text-lg">
           <Link to="/" className="hover:text-desert-500 transition">Home</Link>
           <Link to="/search" className="hover:text-desert-500 transition">Search Buses</Link>
-          <Link to="/tourism" className="hover:text-desert-500 transition">Tourism Bundles</Link>
           
           {user ? (
             <>
               <Link to="/dashboard" className="hover:text-desert-500 transition font-medium">Dashboard</Link>
-              {user.role === 'ADMIN' && (
-                <Link to="/admin" className="hover:text-desert-500 transition font-medium">Admin</Link>
-              )}
               <span className="font-medium text-desert-400">Hi, {user.name.split(' ')[0]}</span>
               <button 
                 onClick={handleLogout}
