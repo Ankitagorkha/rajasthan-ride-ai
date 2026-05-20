@@ -65,7 +65,7 @@ export default function Dashboard() {
   const downloadTicket = (booking) => {
     const doc = new jsPDF();
     doc.setFontSize(22);
-    doc.text('🐪 Rajasthan Rider'S', 20, 30);
+    doc.text("🐪 Rajasthan Rider'S", 20, 30);
     doc.setFontSize(16);
     doc.text('E-Ticket', 20, 50);
     doc.setFontSize(12);

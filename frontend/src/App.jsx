@@ -13,8 +13,8 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-          <Navbar />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-16">         
+         <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
@@ -23,6 +23,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="*" element={<h1>404 Page Not Found</h1>} />
           </Routes>
         </div>
       </Router>
