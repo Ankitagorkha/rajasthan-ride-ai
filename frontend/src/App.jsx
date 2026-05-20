@@ -7,6 +7,8 @@ import LiveTracking from './pages/LiveTracking';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import AdminPanel from './pages/AdminPanel';
+import Tourism from './pages/Tourism';
 import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
@@ -18,11 +20,13 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/tourism" element={<Tourism />} />
             <Route path="/bus/:id" element={<BusDetails />} />
             <Route path="/tracking/:scheduleId" element={<LiveTracking />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/admin" element={<AdminPanel />} />
             <Route path="*" element={<h1>404 Page Not Found</h1>} />
           </Routes>
         </div>

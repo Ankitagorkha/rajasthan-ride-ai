@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import TourismBundles from '../components/TourismBundles';
+import AITripPlanner from '../components/AITripPlanner';
 
 export default function Home() {
   return (
@@ -17,7 +18,7 @@ export default function Home() {
         >
           <div className="flex justify-center mb-6 text-8xl">🐪</div>
           <h1 className="text-7xl md:text-8xl font-bold mb-6 tracking-widest">
-            RAJASTHAN RIDE <span className="text-amber-300">AI</span>
+            RAJASTHAN RIDE
           </h1>
           <p className="text-2xl md:text-3xl mb-10 max-w-2xl mx-auto">
             Premium bus booking with live GPS tracking across the land of kings
@@ -37,6 +38,7 @@ export default function Home() {
         <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-white">Why Choose Rajasthan Rider'S?</h2>
         <p className="text-xl text-gray-600 dark:text-gray-400 mb-12">Real-time bookings • Animated seat maps • Tourism bundles • Live camel tracking</p>
       </div>
+      <AITripPlanner />
             {/* Tourism Bundles Section */}
       <TourismBundles />
     </div>

@@ -1,28 +1,41 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
+import { io } from 'socket.io-client';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { motion } from 'framer-motion';
+import { API_BASE_URL } from '../lib/api';
+
+const busIcon = L.divIcon({
+  className: '',
+  html: '<div style="background:#f59e0b;color:#111827;border:3px solid white;border-radius:999px;width:42px;height:42px;display:grid;place-items:center;font-weight:900;box-shadow:0 10px 25px rgba(0,0,0,.25)">BUS</div>',
+  iconSize: [42, 42],
+  iconAnchor: [21, 21]
+});
 
 export default function LiveTracking() {
   const { scheduleId } = useParams();
   const navigate = useNavigate();
 
   const [position, setPosition] = useState([26.9124, 75.7873]); // Start at Jaipur
+  const [telemetry, setTelemetry] = useState({ eta: 'calculating', speed: 0 });
 
   useEffect(() => {
-    console.log("🚀 Live Tracking started - marker will move now");
+    const socket = io(API_BASE_URL, { transports: ['websocket', 'polling'] });
+    socket.on('busLocation', (location) => {
+      setPosition([location.lat, location.lng]);
+      setTelemetry({ eta: location.eta || '42 min', speed: location.speed || 55 });
+    });
 
     const interval = setInterval(() => {
-      setPosition((prev) => {
-        const newLat = prev[0] + (Math.random() * 0.025 - 0.0125);
-        const newLng = prev[1] + (Math.random() * 0.025 - 0.0125);
-        console.log("📍 Marker moved to:", newLat.toFixed(4), newLng.toFixed(4));
-        return [newLat, newLng];
-      });
-    }, 900); // Moves every 0.9 seconds - very visible
+      setPosition((prev) => [prev[0] + (Math.random() * 0.01 - 0.005), prev[1] + (Math.random() * 0.01 - 0.005)]);
+    }, 1600);
 
-    return () => clearInterval(interval);
+    return () => {
+      socket.disconnect();
+      clearInterval(interval);
+    };
   }, []);
 
   const routePath = [
@@ -43,7 +56,7 @@ export default function LiveTracking() {
             🐪 Live Bus Tracking 
             <span className="bg-green-500 px-6 py-1 rounded-full text-sm font-medium animate-pulse">LIVE</span>
           </h1>
-          <p className="text-xl mt-2">RJ14-PA-2025 • Jaipur → Udaipur</p>
+          <p className="text-xl mt-2">RJ14-PA-2025 - Jaipur to Udaipur - ETA {telemetry.eta} - {telemetry.speed} km/h</p>
         </div>
 
         <div className="h-[580px] relative">
@@ -56,12 +69,12 @@ export default function LiveTracking() {
             <Polyline positions={routePath} color="#f59e0b" weight={8} opacity={0.8} />
             
             {/* Key forces re-render of marker */}
-            <Marker key={`${position[0]}-${position[1]}`} position={position} />
+            <Marker key={`${position[0]}-${position[1]}`} position={position} icon={busIcon} />
           </MapContainer>
         </div>
 
         <div className="p-6 text-center text-sm text-gray-400">
-          Marker is moving every 0.9 seconds • Check console (F12) for logs
+          AI tracking simulates live GPS updates and will use Socket.io whenever the backend is running.
         </div>
       </motion.div>
     </div>

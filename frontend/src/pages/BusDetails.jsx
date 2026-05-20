@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useState } from 'react';
 import SeatMap from '../components/SeatMap';
 import { motion } from 'framer-motion';
+import TourismBundles from '../components/TourismBundles';
 
 export default function BusDetails() {
   const { id } = useParams();
@@ -58,6 +59,8 @@ export default function BusDetails() {
         {/* Seat Map Section */}
         {showSeatMap && <SeatMap onBookSeats={handleBookSeats} />}
       </motion.div>
+
+      <TourismBundles compact />
     </div>
   );
 }
