@@ -16,7 +16,7 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: '*' } });
 const prisma = new PrismaClient();
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-rajasthan-ride-secret';
 
 const demoRoutes = [
